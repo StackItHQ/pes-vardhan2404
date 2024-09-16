@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Database</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script>
+        function updateDb() {
+            const form = document.getElementById('update-db-form');
+            const id = form.elements['id'].value;
+            const value1 = form.elements['value1'].value;
+            const value2 = form.elements['value2'].value;
+
+            fetch('/update-db', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ id, value1, value2 })
+            }).then(response => response.json()).then(data => {
+                if (data.success) {
+                    alert('Database updated successfully');
+                    location.reload();
+                }
+            });
+        }
+
+        function addDb() {
+            const id = document.getElementById('add-db-id').value;
+            const value1 = document.getElementById('add-db-value1').value;
+            const value2 = document.getElementById('add-db-value2').value;
+
+            fetch('/add-db', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ id, value1, value2 })
+            }).then(response => response.json()).then(data => {
+                if (data.success) {
+                    alert('Row added to Database');
+                    location.reload();
+                }
+            });
+        }
+
+        function deleteDb() {
+            const form = document.getElementById('delete-db-form');
+            const id = form.elements['id'].value;
+
+            fetch('/delete-db', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ id })
+            }).then(response => response.json()).then(data => {
+                if (data.success) {
+                    alert('Row deleted from Database');
+                    location.reload();
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+    <header>
+        <h1>Database Page</h1>
+        <nav>
+            <a href="{{ url_for('home') }}">Home</a>
+            <a href="{{ url_for('google_sheets') }}">Google Sheets Page</a>
+        </nav>
+    </header>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Value 1</th>
+                <th>Value 2</th>
+                <th>Last Updated</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in db_data %}
+                <tr>
+                    {% for cell in row %}
+                        <td>{{ cell }}</td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h2>Update Row</h2>
+    <form id="update-db-form" onsubmit="event.preventDefault(); updateDb();">
+        <label for="id">ID:</label>
+        <input type="text" id="id" name="id" required>
+        <label for="value1">Value 1:</label>
+        <input type="text" id="value1" name="value1" required>
+        <label for="value2">Value 2:</label>
+        <input type="text" id="value2" name="value2" required>
+        <button type="submit">Update Row</button>
+    </form>
+
+    <h2>Delete Row</h2>
+    <form id="delete-db-form" onsubmit="event.preventDefault(); deleteDb();">
+        <label for="delete-db-id">ID:</label>
+        <input type="text" id="delete-db-id" name="id" required>
+        <button type="submit">Delete Row</button>
+    </form>
+
+    <h2>Add New Row</h2>
+    <form onsubmit="event.preventDefault(); addDb();">
+        <label for="add-db-id">ID:</label>
+        <input type="text" id="add-db-id" required>
+        <label for="add-db-value1">Value 1:</label>
+        <input type="text" id="add-db-value1" required>
+        <label for="add-db-value2">Value 2:</label>
+        <input type="text" id="add-db-value2" required>
+        <button type="submit">Add Row</button>
+    </form>
+</body>
+</html>

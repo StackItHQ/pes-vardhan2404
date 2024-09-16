@@ -1,3 +1,4 @@
+[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/AHFn7Vbn)
 # Superjoin Hiring Assignment
 
 ### Welcome to Superjoin's hiring assignment! 🚀
@@ -58,4 +59,7 @@ We're available at techhiring@superjoin.ai for all queries.
 All the best ✨.
 
 ## Developer's Section
-*Add your video here, and your approach to the problem (optional). Leave some comments for us here if you want, we will be reading this :)*
+My approach uses "latest wins" approach for synchronization of data between sheets and mysql database. The python code runs forever until stopped and every 30 seconds the data is checked from both mysql database and the google sheets. I used a column in both db and sheets to check for last updated time of each tuple. I used a trigger to auto-update the column in database and used the code currently in AppScript.gs to auto-update time in sheets (by using the App Script feature provided by the sheets). This code fetches all the data in both mysql and sheets every 30 seconds and synchronizes them by setting the latest data for every tuple by timestamp comparision between both of them
+
+## link to the video:
+https://linktr.ee/kncvardhan

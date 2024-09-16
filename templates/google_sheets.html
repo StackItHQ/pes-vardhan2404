@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Sheets</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script>
+        function updateSheet() {
+            const form = document.getElementById('update-form');
+            const row = form.elements['row'].value;
+            const id = form.elements['id'].value;
+            const value1 = form.elements['value1'].value;
+            const value2 = form.elements['value2'].value;
+
+            fetch('/update-sheet', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ row, id, value1, value2 })
+            }).then(response => response.json()).then(data => {
+                if (data.success) {
+                    alert('Sheet updated successfully');
+                    location.reload();
+                }
+            });
+        }
+
+        function deleteSheet() {
+            const form = document.getElementById('delete-form');
+            const row = form.elements['row'].value;
+
+            fetch('/delete-sheet', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ row })
+            }).then(response => response.json()).then(data => {
+                if (data.success) {
+                    alert('Row deleted from Google Sheets');
+                    location.reload();
+                }
+            });
+        }
+
+        function addSheet() {
+            const id = document.getElementById('add-id').value;
+            const value1 = document.getElementById('add-value1').value;
+            const value2 = document.getElementById('add-value2').value;
+
+            fetch('/add-sheet', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ id, value1, value2 })
+            }).then(response => response.json()).then(data => {
+                if (data.success) {
+                    alert('Row added to Google Sheets');
+                    location.reload();
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+    <header>
+        <h1>Google Sheets Page</h1>
+        <nav>
+            <a href="{{ url_for('home') }}">Home</a>
+            <a href="{{ url_for('database') }}">Database Page</a>
+        </nav>
+    </header>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Value 1</th>
+                <th>Value 2</th>
+                <th>Timestamp</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in sheet_data %}
+                <tr>
+                    {% for cell in row %}
+                        <td>{{ cell }}</td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h2>Update Row</h2>
+    <form id="update-form" onsubmit="event.preventDefault(); updateSheet();">
+        <label for="row">Row Number:</label>
+        <input type="number" id="row" name="row" required>
+        <label for="id">ID:</label>
+        <input type="text" id="id" name="id" required>
+        <label for="value1">Value 1:</label>
+        <input type="text" id="value1" name="value1" required>
+        <label for="value2">Value 2:</label>
+        <input type="text" id="value2" name="value2" required>
+        <button type="submit">Update Row</button>
+    </form>
+
+    <h2>Delete Row</h2>
+    <form id="delete-form" onsubmit="event.preventDefault(); deleteSheet();">
+        <label for="delete-row">Row Number:</label>
+        <input type="number" id="delete-row" name="row" required>
+        <button type="submit">Delete Row</button>
+    </form>
+
+    <h2>Add New Row</h2>
+    <form onsubmit="event.preventDefault(); addSheet();">
+        <label for="add-id">ID:</label>
+        <input type="text" id="add-id" required>
+        <label for="add-value1">Value 1:</label>
+        <input type="text" id="add-value1" required>
+        <label for="add-value2">Value 2:</label>
+        <input type="text" id="add-value2" required>
+        <button type="submit">Add Row</button>
+    </form>
+</body>
+</html>
