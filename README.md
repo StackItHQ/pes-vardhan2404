@@ -61,5 +61,5 @@ All the best ✨.
 ## Developer's Section
 My approach uses "latest wins" approach for synchronization of data between sheets and mysql database. The python code runs forever until stopped and every 30 seconds the data is checked from both mysql database and the google sheets. I used a column in both db and sheets to check for last updated time of each tuple. I used a trigger to auto-update the column in database and used the code currently in AppScript.gs to auto-update time in sheets (by using the App Script feature provided by the sheets). This code fetches all the data in both mysql and sheets every 30 seconds and synchronizes them by setting the latest data for every tuple by timestamp comparision between both of them
 
-##link to the video:
+## link to the video:
 https://linktr.ee/kncvardhan
